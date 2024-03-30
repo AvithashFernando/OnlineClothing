@@ -20,6 +20,52 @@ struct CartItemView: View {
                 }
                 .padding()
 
+                HStack(spacing: 20) {
+                    Button {
+                        item.count += 1
+                        //onCartCountValueChanged()
+                    } label: {
+                        Circle()
+                            .foregroundColor(.white)
+                            .shadow(radius: 4)
+                            .overlay {
+                                Image(systemName: "plus")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .tint(.black)
+                                    .frame(width: 14, height: 14)
+                            }
+                    }
+                    .frame(width: 24, height: 24)
+
+                    Text("\(item.count)")
+                        .font(tenorSans(24))
+                        .foregroundColor(.black)
+
+                        Button {
+                            item.count -= 1
+                            if item.count < 0 {
+                                item.count = 0
+                            }
+
+                            // onCartCountValueChanged()
+                        } label: {
+                            Circle()
+                                .foregroundColor(.white)
+                                .shadow(radius: 4)
+                                .overlay {
+                                    Image(systemName: "minus")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .tint(.black)
+                                        .frame(width: 14, height: 14)
+                                }
+                        }
+                        .frame(width: 24, height: 24)
+
+                        Spacer()
+                    }
+
                 Spacer()
 
                 Image(systemName: "trash")
