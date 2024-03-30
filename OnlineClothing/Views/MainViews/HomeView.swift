@@ -1,6 +1,10 @@
 import SwiftUI
+import Kingfisher
 
 struct HomeView: View {
+
+    @StateObject var productVM : ProductViewModel = ProductDataModel()
+
     @EnvironmentObject var cartManager: CartManager
     var body: some View {
         NavigationStack {
