@@ -1,175 +1,103 @@
 import SwiftUI
 
 struct HomeView: View {
-
-    @State var presentSideMenu = false
-    @State var presentSideCart = false
-
-    private var categories = [Categories.All.rawValue, Categories.Apparel.rawValue,
-        Categories.Dress.rawValue, Categories.TShirt.rawValue]
-
-    @State private var selectedCategory: Int = 0
-
+    @EnvironmentObject var cartManager: CartManager
     var body: some View {
-        ZStack {
-            Color.white.edgesIgnoringSafeArea(.all)
-            ZStack {
-                VStack(spacing: 0){
-                    ScrollView(.vertical){
-                        HeroImageView()
-                        NewArrivalView()
-                        Image("Brand")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                        CollectionsView()
-                        FooterView()
-                        TrendingHashTagsView()
-                        Spacer()
-                    }
+        NavigationStack {
+            ZStack(alignment: .top) {
+                Color.white
                     .edgesIgnoringSafeArea(.all)
-                }
-                .padding(.top, 56)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .overlay(alignment: .top) {
-                HeaderView {
-                    presentSideMenu.toggle()
-                } cartAction : {
-                    presentSideCart.toggle()
-                }
-            }
 
-            SideMenu()
-            SideCart()
-        }
-    }
+                VStack {
+                    Header()
 
-    @ViewBuilder
-    private func HeroImageView() -> some View {
-        ZStack {
-            Image("Hero")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(maxWidth: .infinity)
-                .frame(height: 620)
+                    SearchView()
 
-            Button{
-                print("Explore Collection Button clicked")
+                    ImageSliderView()
 
-            } label: {
-                RoundedRectangle(cornerRadius: 30).overlay {
-                    Text("Explore Collection")
-                        .font(Font.custom("Tenor Sans", size: 20))
-                        .foregroundColor(.white)
-                }
-            }
-            .frame(width: 253, height: 40)
-            .tint(.black.opacity(0.4))
-            .offset(.init(width: 0, height: 250))
-        }
+                    HStack {
+                        Text("New Arrival")
+                            .font(.title)
+                            .fontWeight(.medium)
 
-    }
+                        Spacer()
 
-    @ViewBuilder
-    private func NewArrivalView() -> some View {
-        Text("New Arrival")
-            .font(Font.custom("Tenor Sans", size: 28))
-            .multilineTextAlignment(.center)
-            .foregroundColor(.black)
-            .frame(width: 225, height: 32, alignment: .top)
-            .padding(.top, 25)
+                        NavigationLink(description: {
+                            ProductsView()
+                        }, label: {
+                            Image(systemName: "circle.grid.2x2.fill")
+                                .foregroundColor(Color(.black))
+                        })
+                    }
+                    .padding()
 
-        Image("Divider")
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 140)
-            .padding(.top, 10)
-
-        VStack {
-            HStack(spacing: 20) {
-                ForEach(0..<categories.count, id: \.self) { i in
-                    CategoryView(isSelected: i == selectedCategory, title:
-                        categories[i])
-                        .onTapGesture {
-                            selectedCategory = i
+                    ScrollView(.horizontal, showsIndicators: false){
+                        HStack(spacing: 10) {
+                            ForEach(productList, id: \.id) {product in
+                                NavigationLink{
+                                    ProductDetailsView(product: product)
+                                } label: {
+                                    ProductCardView(product: product)
+                                        .environmentObject(cartManager)
+                                }
+                            }
                         }
-
+                        .padding(.horizontal)
+                    }
                 }
             }
-            .frame(maxWidth: .infinity)
-
-            HStack {
-                    ProductItemView(product: product1)
-                    ProductItemView(product: product2)
-            }
-            HStack {
-                    ProductItemView(product: product3)
-                    ProductItemView(product: product4)
-            }
-
-            Button {
-
-            } label: {
-                HStack(alignment: .center, spacing: 8) {
-                    Text("Explore More")
-                        .font(tenorSans(20))
-                        .multilineTextAlignment(.center)
-
-                    Image(systemName: "arrow.forward")
-                        .frame(width: 18, height: 18)
-                }
-            }
-            .tint(Color.BodyGrey)
-            .padding(12)
 
         }
+        .environmentObject(cartManager)
     }
-
-    @ViewBuilder
-    private func CollectionsView() -> some View {
-        Text("Collection")
-            .font(tenorSans(28))
-            .foregroundColor(Color.black)
-        
-        Image("Collection 1")
-            .resizable()
-            .aspectRatio(contentMode: .fill)
-            .frame(height: 244, alignment: .top)
-            .clipped()
-
-        Image("Collection 2")
-            .resizable()
-            .aspectRatio(contentMode: .fill)
-            .frame(height: 244, alignment: .top)
-            .clipped()
-
-        Image("Divider")
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 140)
-            .padding(.top, 10)
-
-    }
-
-    @ViewBuilder
-    private func SideMenu() -> some View {
-        SideView(isShowing: $presentSideMenu, content:
-            AnyView(SideMenuViewContents(presentSideMenu:
-            $presentSideMenu)), direction: .leading)
-    }
-
-    @ViewBuilder
-    private func SideCart() -> some View {
-        SideView(isShowing: $presentSideCart, content:
-            AnyView(SideCartViewContents(presentSideMenu:
-            $presentSideCart)), direction: .trailing)
-        
-    }
-
 }
-struct HomeView_Previews: PreviewProvider {
+
+struct HomeView_Preview: PreviewProvider {
     static var previews: some View {
         HomeView()
+            .environmentObject(CartManager())
     }
 }
 
+struct Header: View {
+    @EnvironmentObject var cartManager: CartManager
+    var body: some View {
+        NavigationStack {
+            VStack(alignment: .leading) {
+                HStack {
+                    Image(systemName:"location.fill")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                        .padding(.trailing)
+
+                    Text("Colombo, SL")
+                        .font(.title2)
+                        .foregroundColor(.gray)
+
+                    Spacer()
+
+                    NavigationLink(destination: CartView()
+                        .environmentObject(cartManager)
+                    ) {
+                        CartButtonView(numberOfProducts: cartManager.products.count)
+                    }
+                }
+                Text("Choose The")
+                        .font(.largeTitle .bold())
+                    
+                    + Text("Outer Wear")
+                        .font(.largeTitle .bold())
+                        .foregroundColor(Color(.red))
+
+                    Text("That Suits you")
+                        .font(.largeTitle .bold())
+            }
+        }
+        .padding()
+        .environmentObject(CartManager())
+
+    }
+
+}
+
+                    
