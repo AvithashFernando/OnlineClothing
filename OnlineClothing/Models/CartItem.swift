@@ -12,7 +12,7 @@ class CartItem {
     var count: Int = 0
 
     init(product: Product, count: Int) {
-        self.product = product
+        //self.product = product
         self.count = count
     }
 }
