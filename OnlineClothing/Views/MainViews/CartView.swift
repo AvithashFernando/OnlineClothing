@@ -1,36 +1,18 @@
+//
+//  CartView.swift
+//  OnlineClothing
+//
+//  Created by NIBM-LAB04-PC07 on 2024-03-31.
+//
+
 import SwiftUI
 
 struct CartView: View {
-    @EnvironmentObject var cartManager: CartManager
     var body: some View {
-        ScrollView{
-            if cartManager.products.count > 0{
-                ForEach(cartManager.products, id: \.id) {product in
-                    CartItemView(product: product)
-                }
-                HStack{
-                    Text("Your Total is ")
-                    Spacer()
-                    Text("LKR\(cartManager.total).00")
-                        .bold()
-                }
-                .padding()
-
-                PaymentButton(action: {})
-                    .padding()
-                    
-            } else {
-                Text("Your Cart is Empty")
-            }
-        }
-        .NavigationTitle(Text("My Cart"))
-        .padding(.top)
+        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
-struct CartView_Previews: PreviewProvider {
-    static var previews: some View {
-        CartView(product: productList[2])
-            .environmentObject(CartManager())
-    }
+#Preview {
+    CartView()
 }

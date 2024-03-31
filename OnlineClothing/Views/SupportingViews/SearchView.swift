@@ -1,32 +1,18 @@
+//
+//  SearchView.swift
+//  OnlineClothing
+//
+//  Created by NIBM-LAB04-PC07 on 2024-03-31.
+//
+
 import SwiftUI
 
 struct SearchView: View {
-    @State private var Search: String = ""
-
     var body: some View {
-        HStack {
-            HStack {
-                Image(systemName: "magnifyingglass")
-                    .padding(.leading)
-
-                TextField("Search your Style", text: $search)
-                    .padding()
-            }
-            .background(Color(.blue))
-            .cornerRadius(12)
-
-            Image(systemName: "camera")
-                .padding()
-                .foregroundColor(.white)
-                .background(Color(.blue))
-                .cornerRadius(12)
-        }
-            .padding(.horizontal)
+        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
-struct SearchView_Previews: PreviewProvider {
-    static var previews: some View {
-        SearchView()
-    }
+#Preview {
+    SearchView()
 }
